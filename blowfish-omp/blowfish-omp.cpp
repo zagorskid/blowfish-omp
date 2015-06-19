@@ -4,6 +4,7 @@
 #include <vector>
 #include <chrono>
 #include <inttypes.h>
+#include <omp.h>
 
 using namespace std;
 
@@ -547,7 +548,7 @@ int main(int argc, char *argv[])
 
 
 	// config input/output files:
-	string plainFilename = "input-16k.txt";
+	string plainFilename = "input-512m.txt";
 	if (argc > 1)
 	{
 		plainFilename = argv[1];
@@ -615,7 +616,14 @@ int main(int argc, char *argv[])
 
 	// ENCRYPTION		
 	outputText = new char[extendedFileLength];
-	for (unsigned long int i = 0; i < extendedFileLength; i += 8)
+
+	// omp enable
+	omp_set_num_threads(4);
+	//omp_set_nested(1);
+		
+	//#pragma omp parallel for shared(extendedFileLength, inputText, outputText, P, S, in, out)
+	#pragma omp parallel for
+	for (long int i = 0; i < extendedFileLength; i += 8)
 	{
 		// input block preparation
 		for (int j = 0; j < 8; ++j)
@@ -626,7 +634,7 @@ int main(int argc, char *argv[])
 		// encryption of block
 		blowfish_encrypt(P, S, in, out);
 
-		// output text prerparation
+		// output text preparation
 		for (int j = 0; j < 8; ++j)
 		{
 			outputText[i + j] = out[j];
