@@ -619,10 +619,8 @@ int main(int argc, char *argv[])
 
 	// omp enable
 	omp_set_num_threads(4);
-	//omp_set_nested(1);
-		
-	//#pragma omp parallel for shared(extendedFileLength, inputText, outputText, P, S, in, out)
-	#pragma omp parallel for
+	
+	#pragma omp parallel for shared(extendedFileLength, inputText, outputText, P, S) private(in, out)
 	for (long int i = 0; i < extendedFileLength; i += 8)
 	{
 		// input block preparation
