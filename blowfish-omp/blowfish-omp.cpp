@@ -650,7 +650,7 @@ int main(int argc, char *argv[])
 	else
 	{
 		cout << encryptionTime.count() << ";";
-		cout << "0;"; // empty value for time of transfer to/from GPU memory
+		cout << "0;0;"; // empty values for time of transfer to/from GPU memory and queue handling
 	}
 		
 
