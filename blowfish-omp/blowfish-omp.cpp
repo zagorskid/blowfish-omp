@@ -23,7 +23,6 @@ bool debug = false; // if true, additional messages are displayed. If false, out
 uint32_t P[BLOWFISH_ROUNDS + 2] = { 0 };    // Blowfish round keys
 uint32_t S[S_ROWS * S_COLUMNS] = { 0 };     // key dependent S-boxes
 
-
 // time measurement for higher precision
 LARGE_INTEGER timerFreq_;
 LARGE_INTEGER counterAtStart_;
@@ -338,6 +337,7 @@ static const uint32_t Svalues[4][256] = {
 		0xB74E6132L, 0xCE77E25BL, 0x578FDFE3L, 0x3AC372E6L }
 };
 
+
 /*
 * F function
 */
@@ -548,7 +548,6 @@ void printBlock(const unsigned char *block)
 
 
 
-
 int main(int argc, char *argv[])
 {
 	// time measurement
@@ -560,8 +559,7 @@ int main(int argc, char *argv[])
 	unsigned int lastTime = 0, newTime = 0;
 	startTime();
 	newTime = calculateElapsedTime();
-
-
+	
 	// key definition
 	const unsigned char key[32] = { 'z', 'i', 'X', '9', '$', 'f', 'g', 'P', '1', '7', '9', 's', 'i', 'J', '%', 'o', 'a', 'Q', 'p', '!', 'e', 'K', 'z', 'v', 'W', 'b', 'c', 'T', '8', 'g', '6', '9' };
 	unsigned int keysize = 256;
@@ -580,17 +578,15 @@ int main(int argc, char *argv[])
 	// input and output blocks preparation
 	unsigned char in[BLOWFISH_BLOCKSIZE] = { ' ' };
 	unsigned char out[BLOWFISH_BLOCKSIZE] = { ' ' };
-
-
+	
 	// config input/output files:
-	string plainFilename = "input-1k.txt";
+	string plainFilename = "input-512m.txt";
 	if (argc > 1)
 	{
 		plainFilename = argv[1];
 	}
 	string cryptedFilename = "crypted-" + plainFilename;
-
-
+	
 	// load file into memory
 	if (debug)
 	{
@@ -652,7 +648,6 @@ int main(int argc, char *argv[])
 		cout << "0;0;"; // empty values for OpenCL initialisation and kernel loading
 	}		
 
-
 	// ENCRYPTION		
 	outputText = new char[extendedFileLength];
 
@@ -688,8 +683,7 @@ int main(int argc, char *argv[])
 	{
 		cout << encryptionTime.count() << ";";
 		cout << "0;0;"; // empty values for time of transfer to/from GPU memory and queue handling
-	}
-		
+	}		
 
 	// Save result to file			
 	ofstream output;
@@ -711,20 +705,19 @@ int main(int argc, char *argv[])
 		cout << "File saved in\t\t" << fileSaving.count() << " ms." << endl;
 	else
 		cout << fileSaving.count() << ";";
+		
+	delete[] outputText;
+	delete[] inputText;
 
 	newTime = calculateElapsedTime();
 	auto timestampStop = std::chrono::high_resolution_clock::now();
 	auto totalTime = FpMilliseconds(timestampStop - timestampStart);
-
+	
 	// SUMMARY
 	if (debug)
 		cout << "Total time elapsed:\t" << totalTime.count() << " ms." << endl;
 	else
-		cout << totalTime.count() << ";" << endl;
-
-
-	delete[] outputText;
-	delete[] inputText;
+		cout << totalTime.count() << ";" << endl;	
 
 	if (debug)
 		system("PAUSE");
